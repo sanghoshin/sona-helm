@@ -70,8 +70,8 @@ spec:
     spec:
       initContainers:
         - name: noti-ip
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.noti.image.repository }}:{{ .Values.noti.image.tag }}
+          imagePullPolicy: {{ .Values.noti.image.pullPolicy }}
           command: ['sh', '-c','sleep 3; curl -X POST clusterman-service:9191/leave -d "{\"nodename\":\"$MY_POD_NAME\",\"nodeip\":\"\"}"; sleep 6; curl -X POST clusterman-service:9191/join -d "{\"nodename\":\"$MY_POD_NAME\",\"nodeip\":\"$MY_POD_IP\"}"']
           resources: {}
           terminationMessagePath: /dev/termination-log

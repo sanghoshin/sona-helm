@@ -24,6 +24,12 @@ clusterman:
 
   affinity: {}
 
+noti-ip:
+  image:
+    repository: appropriate/curl
+    tag: latest
+    pullPolicy: IfNotPresent
+
 onos:
   replicaCount: 3
 
