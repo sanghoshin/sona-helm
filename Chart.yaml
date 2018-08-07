@@ -4,6 +4,5 @@ description: A Helm chart for SONA deployment
 name: sona
 home: https://wiki.onosproject.org/display/ONOS/SONA%3A+DC+Network+Virtualization
 version: 0.1.0
-maintainers: Sangho Shin
 details:
   Deploys cluster manager and onos with sona applications.
