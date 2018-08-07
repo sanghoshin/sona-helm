@@ -1,0 +1,128 @@
+kin.replicaCount }}: deployment
+metadata:
+  generation: 1
+  labels:
+    run: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"     
+  name: "{{ .Release.Name }}"
+  namespace: default
+  resourceVersion: "3030"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/clusterman
+spec:
+  selector:
+    matchLabels:
+      run: "{{ .Release.Name }}"
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: "{{ .Release.Name }}"
+    spec:
+      {{- if .Values.image.pullSecret }}    
+            imagePullSecrets:
+              - name: "{{ .Values.image.pullSecret }}"
+      {{- end }} 
+      containers:
+      - name: clusterman
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        ports:
+        - containerPort: 9191
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
+---
+apiVersion: apps/v1beta1 # for versions before 1.9.0 use apps/v1beta2
+kind: StatefulSet
+metadata:
+  generation: 1
+  labels:
+    run: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"     
+  name: "{{ .Release.Name }}"
+  namespace: default
+  resourceVersion: "3030"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/onos-sona
+spec:
+  serviceName: "onos-sona"
+  selector:
+    matchLabels:
+      app: sona-app
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: "{{ .Release.Name }}"
+    spec:
+      {{- if .Values.image.pullSecret }}    
+            imagePullSecrets:
+              - name: "{{ .Values.image.pullSecret }}"
+      {{- end }}          
+      initContainers:
+        - name: noti-ip
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ['sh', '-c','sleep 3; curl -X POST clusterman-service:9191/leave -d "{\"nodename\":\"$MY_POD_NAME\",\"nodeip\":\"\"}"; sleep 6; curl -X POST clusterman-service:9191/join -d "{\"nodename\":\"$MY_POD_NAME\",\"nodeip\":\"$MY_POD_IP\"}"']
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+      containers:
+        - name: onos-sona
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8101
+            - containerPort: 8181
+            - containerPort: 9876
+            - containerPort: 6640
+            - containerPort: 6653
+          volumeMounts:
+            - mountPath: /root/nginx-config
+              name: nginx-config
+          env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Dfile.encoding=UTF8 -Donos.cluster.metadata.uri=http://clusterman-service:9191/cluster.json"
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      volumes:
+        - name: onos-config
+          hostPath:
+            path: /home/ubuntu/onos-config
+            type: Directory
+        - name: nginx-config
+          hostPath:
+            path: /tmp/nginx_conf
+            type: Directory
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
