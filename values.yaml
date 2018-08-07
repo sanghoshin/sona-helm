@@ -24,7 +24,7 @@ clusterman:
 
   affinity: {}
 
-noti-ip:
+noti:
   image:
     repository: appropriate/curl
     tag: latest
