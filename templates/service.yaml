@@ -5,8 +5,8 @@ metadata:
   labels:
     run: {{ .Release.Name }}-clusterman-service
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}" 
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
   namespace: default
   resourceVersion: "3066"
   selfLink: /api/v1/namespaces/default/services/clusterman
