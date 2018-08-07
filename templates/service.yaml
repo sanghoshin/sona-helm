@@ -5,14 +5,12 @@ metadata:
   labels:
     run: "{{ .Release.Name }}-clusterman-service"
   namespace: default
-  resourceVersion: "3066"
-  selfLink: /api/v1/namespaces/default/services/clusterman
 spec:
   ports:
   - port: 9191
     name: rest
   selector:
-    run: "{{ .Release.Name }}-clusterman-service"
+    run: "{{ .Release.Name }}-clusterman"
 ---
 apiVersion: v1
 kind: Service
@@ -33,5 +31,5 @@ spec:
   - port: 6653
     name: openflow
   selector:
-    run: "{{ .Release.Name }}-sona-service"
+    run: "{{ .Release.Name }}-sona"
 
