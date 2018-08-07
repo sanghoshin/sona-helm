@@ -5,7 +5,7 @@ metadata:
   labels:
     run: "{{ .Release.Name }}-clusterman"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
+    release: sona-chart
     heritage: "{{ .Release.Service }}"     
   name: "{{ .Release.Name }}-clusterman"
   namespace: default
