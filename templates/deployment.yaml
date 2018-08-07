@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   generation: 1
   labels:
-    run: "{{ .Release.Name }}"-clusterman
+    run: "{{ .Release.Name }}-clusterman"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"     
