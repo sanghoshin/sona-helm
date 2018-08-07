@@ -7,20 +7,20 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"     
-  name: "{{ .Release.Name }}"
+  name: "{{ .Release.Name }}-clusterman"
   namespace: default
   resourceVersion: "3030"
   selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/clusterman
 spec:
   selector:
     matchLabels:
-      run: "{{ .Release.Name }}"-clusterman
+      run: "{{ .Release.Name }}-clusterman"
   replicas: {{ .Values.clusterman.replicaCount }}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        run: "{{ .Release.Name }}"-clusterman
+        run: "{{ .Release.Name }}-clusterman"
     spec:
       containers:
       - name: clusterman
@@ -43,11 +43,11 @@ kind: StatefulSet
 metadata:
   generation: 1
   labels:
-    run: "{{ .Release.Name }}"-sona
+    run: "{{ .Release.Name }}-sona"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"     
-  name: "{{ .Release.Name }}"
+  name: "{{ .Release.Name }}-sona"
   namespace: default
   resourceVersion: "3030"
   selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/onos-sona
@@ -55,7 +55,7 @@ spec:
   serviceName: "onos-sona"
   selector:
     matchLabels:
-      run: "{{ .Release.Name }}"-sona
+      run: "{{ .Release.Name }}-sona"
   replicas: {{ .Values.onos.replicaCount }}
   strategy:
     rollingUpdate:
@@ -66,7 +66,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        run: "{{ .Release.Name }}"-sona
+        run: "{{ .Release.Name }}-sona"
     spec:
       initContainers:
         - name: noti-ip
