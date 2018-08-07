@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   generation: 1
   labels:
-    run: "{{ .Release.Name }}"
+    run: "{{ .Release.Name }}"-clusterman
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"     
@@ -14,13 +14,13 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: "{{ .Release.Name }}"
-  replicas: {{ .Values.replicaCount }}
+      run: "{{ .Release.Name }}"-clusterman
+  replicas: {{ .Values.clusterman.replicaCount }}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        run: "{{ .Release.Name }}"
+        run: "{{ .Release.Name }}"-clusterman
     spec:
       containers:
       - name: clusterman
@@ -43,7 +43,7 @@ kind: StatefulSet
 metadata:
   generation: 1
   labels:
-    run: "{{ .Release.Name }}"
+    run: "{{ .Release.Name }}"-sona
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"     
@@ -55,7 +55,7 @@ spec:
   serviceName: "onos-sona"
   selector:
     matchLabels:
-      app: sona-app
+      run: "{{ .Release.Name }}"-sona
   replicas: {{ .Values.onos.replicaCount }}
   strategy:
     rollingUpdate:
@@ -66,7 +66,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        run: "{{ .Release.Name }}"
+        run: "{{ .Release.Name }}"-sona
     spec:
       initContainers:
         - name: noti-ip

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ .Release.Name }}"
+  name: "{{ .Release.Name }}"-clusterman-service
   labels:
-    run: "{{ .Release.Name }}"
+    run: "{{ .Release.Name }}"-clusterman-service
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}" 
@@ -15,12 +15,14 @@ spec:
   - port: 9191
     name: rest
   selector:
-    run: "{{ .Release.Name }}"
+    run: "{{ .Release.Name }}"-clusterman-service
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ .Release.Name }}"
+  name: "{{ .Release.Name }}"-sona-service
+  labels:
+    run: "{{ .Release.Name }}"-sona-service
 spec:
   ports:
   - port: 8101
@@ -34,5 +36,5 @@ spec:
   - port: 6653
     name: openflow
   selector:
-    run: "{{ .Release.Name }}"
+    run: "{{ .Release.Name }}"-sona-service
 
