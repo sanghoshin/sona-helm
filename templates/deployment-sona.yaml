@@ -1,43 +1,19 @@
-apiVersion: apps/v1beta1 # for versions before 1.9.0 use apps/v1beta2
-kind: StatefulSet
-metadata:
-  generation: 1
-  labels:
-    run: "{{ .Release.Name }}-clusterman"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: sona-chart
-    heritage: "{{ .Release.Service }}"     
-  name: "{{ .Release.Name }}-clusterman"
-  namespace: default
-  resourceVersion: "3030"
-  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/clusterman
-spec:
-  selector:
-    matchLabels:
-      run: "{{ .Release.Name }}-clusterman"
-  replicas: {{ .Values.clusterman.replicaCount }}
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        run: "{{ .Release.Name }}-clusterman"
-    spec:
-      containers:
-      - name: clusterman
-        image: {{ .Values.clusterman.image.repository }}:{{ .Values.clusterman.image.tag }}
-        imagePullPolicy: {{ .Values.clusterman.image.pullPolicy }}
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-        ports:
-        - containerPort: 9191
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-status: {}
----
+{{/*
+Copyright 2018 The SONA Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/}}
+
 apiVersion: apps/v1beta1 # for versions before 1.9.0 use apps/v1beta2
 kind: StatefulSet
 metadata:
@@ -48,34 +24,27 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"     
   name: "{{ .Release.Name }}-sona"
-  namespace: default
-  resourceVersion: "3030"
-  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/onos-sona
+  namespace: "{{ .Release.Namespace }}"
 spec:
   serviceName: "onos-sona"
   selector:
     matchLabels:
       run: "{{ .Release.Name }}-sona"
   replicas: {{ .Values.onos.replicaCount }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         run: "{{ .Release.Name }}-sona"
     spec:
+{{ if .Values.onos.node_selector.key }}
+      nodeSelector:
+        {{ .Values.onos.node_selector.key }}: {{ .Values.onos.node_selector.value | quote }}
+{{ end }}
       initContainers:
         - name: noti-ip
           image: {{ .Values.noti.image.repository }}:{{ .Values.noti.image.tag }}
           imagePullPolicy: {{ .Values.noti.image.pullPolicy }}
           command: ['sh', '-c','sleep 3; curl -X POST clusterman-service:9191/leave -d "{\"nodename\":\"$MY_POD_NAME\",\"nodeip\":\"\"}"; sleep 6; curl -X POST clusterman-service:9191/join -d "{\"nodename\":\"$MY_POD_NAME\",\"nodeip\":\"$MY_POD_IP\"}"']
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
           env:
             - name: MY_POD_IP
               valueFrom:
@@ -98,12 +67,6 @@ spec:
           env:
             - name: JAVA_TOOL_OPTIONS
               value: "-Dfile.encoding=UTF8 -Donos.cluster.metadata.uri=http://clusterman-service:9191/cluster.json"
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-status: {}
+
