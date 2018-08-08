@@ -43,6 +43,8 @@ noti:
 onos:
   replicaCount: 3
 
+  hostNetwork: false
+
   node_selector:
     key: null
     value: null

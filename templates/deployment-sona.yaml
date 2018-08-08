@@ -40,6 +40,7 @@ spec:
       nodeSelector:
         {{ .Values.onos.node_selector.key }}: {{ .Values.onos.node_selector.value | quote }}
 {{ end }}
+      hostNetwork: {{ .Values.onos.hostNetwork}}
       initContainers:
         - name: noti-ip
           image: {{ .Values.noti.image.repository }}:{{ .Values.noti.image.tag }}
