@@ -20,15 +20,15 @@ metadata:
     run: "{{ .Release.Name }}-sona-service"
 spec:
   ports:
-  - port: {{ .Values.onos.onos_ssh }}
+  - port: {{ .Values.onos.port.onos_ssh }}
     name: karaf
-  - port: {{ .Values.onos.onos_web }}
+  - port: {{ .Values.onos.port.onos_web }}
     name: onos-rest
-  - port: {{ .Values.onos.onos_cluster }}
+  - port: {{ .Values.onos.port.onos_cluster }}
     name: cluster
-  - port: {{ .Values.onos.ovsdb }}
+  - port: {{ .Values.onos.port.ovsdb }}
     name: ovs
-  - port: {{ .Values.onos.openflow }}
+  - port: {{ .Values.onos.port.openflow }}
     name: openflow
   selector:
     run: "{{ .Release.Name }}-sona"
