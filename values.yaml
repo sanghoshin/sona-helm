@@ -39,6 +39,8 @@ noti:
     repository: appropriate/curl
     tag: latest
     pullPolicy: IfNotPresent
+  uri: clusterman-service
+
 
 onos:
   replicaCount: 3
