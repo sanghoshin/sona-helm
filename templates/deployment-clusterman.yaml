@@ -39,6 +39,7 @@ spec:
       nodeSelector:
         {{ .Values.clusterman.node_selector.key }}: {{ .Values.clusterman.node_selector.value | quote }}
 {{ end }}
+      hostNetwork: {{ .Values.onos.hostNetwork}}
       containers:
       - name: clusterman
         image: {{ .Values.clusterman.image.repository }}:{{ .Values.clusterman.image.tag }}
