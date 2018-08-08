@@ -90,29 +90,17 @@ spec:
           image: {{ .Values.onos.image.repository }}:{{ .Values.onos.image.tag }}
           imagePullPolicy: {{ .Values.onos.image.pullPolicy }}
           ports:
-            - containerPort: 8101
-            - containerPort: 8181
-            - containerPort: 9876
-            - containerPort: 6640
-            - containerPort: 6653
-          volumeMounts:
-            - mountPath: /root/nginx-config
-              name: nginx-config
+            - containerPort: {{ .Values.onos.port.openflow }}
+            - containerPort: {{ .Values.onos.port.ovsdb }}
+            - containerPort: {{ .Values.onos.port.onos_web }}
+            - containerPort: {{ .Values.onos.port.onos_ssh }}
+            - containerPort: {{ .Values.onos.port.onos_cluster }}
           env:
             - name: JAVA_TOOL_OPTIONS
               value: "-Dfile.encoding=UTF8 -Donos.cluster.metadata.uri=http://clusterman-service:9191/cluster.json"
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-      volumes:
-        - name: onos-config
-          hostPath:
-            path: /home/ubuntu/onos-config
-            type: Directory
-        - name: nginx-config
-          hostPath:
-            path: /tmp/nginx_conf
-            type: Directory
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

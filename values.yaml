@@ -38,6 +38,13 @@ onos:
     tag: latest
     pullPolicy: IfNotPresent
 
+  port:
+    openflow: 6653
+    ovsdb: 6640
+    onos_web: 8181
+    onos_ssh: 8101
+    onos_cluster: 9876
+
   nameOverride: ""
   fullnameOverride: ""
 
