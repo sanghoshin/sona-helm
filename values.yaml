@@ -27,12 +27,12 @@ clusterman:
     tag: latest
     pullPolicy: IfNotPresent
 
+  port:
+    rest: 9191
+
   nameOverride: ""
   fullnameOverride: ""
 
-  service:
-    type: ClusterIP
-    port: 80
 
 noti:
   image:
@@ -64,7 +64,4 @@ onos:
   nameOverride: ""
   fullnameOverride: ""
 
-  service:
-    type: ClusterIP
-    port: 80
 

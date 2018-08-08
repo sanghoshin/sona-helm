@@ -23,7 +23,7 @@ metadata:
     run: "{{ .Release.Name }}-clusterman-service"
 spec:
   ports:
-  - port: 9191
+  - port: {{ .Values.clusterman.port.rest }}
     name: rest
   selector:
     run: "{{ .Release.Name }}-clusterman"
