@@ -2,7 +2,7 @@ Please check if SONA has been deployed successfully or not
 
 Log in to one of ONOS using ssh as following
 
- ssh -p 8101 karaf@IPADDRESS_OF_A_POD
+ ssh -p 8101 karaf@sona-service
 
 Check if nodes ONOS CLI commands show that all node status are READY.
 
